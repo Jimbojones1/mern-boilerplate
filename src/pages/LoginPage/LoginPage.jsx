@@ -11,29 +11,25 @@ export default function LoginPage(props){
         email: '',
         pw: '',
     })
-   
-
+  
     const formRef = useRef();
 
     useEffect(() => {
       formRef.current.checkValidity() ? setValidForm(false) : setValidForm(true);
     });
 
-
-
     return (
         <>
-          <h1>Sign Up</h1>
+          <h1>Login</h1>
           <form  autoComplete="off" ref={formRef} onSubmit={async (e) => {
             e.preventDefault()
-            console.log(state, ' this is state')
+            
             try {
                 await userService.login(state);
                 // Route to wherever you want!
-                alert("Logged in, time to go code where you want to go now!")
+                alert("Logged in, time to go code where you want to go now! ~ Login Component!")
               } catch (err) {
                 // Invalid user data (probably duplicate email)
-                console.log(err.message)
                 setError(err.message)
               }
           }}>
@@ -64,7 +60,7 @@ export default function LoginPage(props){
               className="btn"
               disabled={invalidForm}
             >
-              Signup
+              Login
             </button>
           </form>
 
