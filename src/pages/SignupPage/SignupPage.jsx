@@ -32,6 +32,8 @@ export default function SignUpPage(props){
             try {
                 await userService.signup(state);
                 // Route to wherever you want!
+                console.log(props, 'this props')
+                props.handleSignupOrLogin();
                 alert("You're logged in! Time to Code where you want to go Now! ~ SignupComponent")
               } catch (err) {
                 // Invalid user data (probably duplicate email)

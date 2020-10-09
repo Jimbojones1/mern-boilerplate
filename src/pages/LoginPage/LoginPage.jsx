@@ -26,6 +26,7 @@ export default function LoginPage(props){
             
             try {
                 await userService.login(state);
+                props.handleSignupOrLogin();
                 // Route to wherever you want!
                 alert("Logged in, time to go code where you want to go now! ~ Login Component!")
               } catch (err) {
@@ -64,7 +65,7 @@ export default function LoginPage(props){
             </button>
           </form>
 
-          {error ? <ErrorMessage error={error} /> : null}
+          { error ? <ErrorMessage error={error} /> : null }
         </>
       );
 }
