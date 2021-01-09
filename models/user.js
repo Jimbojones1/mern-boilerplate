@@ -19,6 +19,14 @@ userSchema.set('toJSON', {
   }
 });
 
+// Need this for .populate
+userSchema.set('toObject', {
+  transform: (doc, ret, opt) => {
+   delete ret.password;
+   return ret;
+  }
+})
+
 // DO NOT DEFINE instance methods with arrow functions, 
 // they prevent the binding of this
 userSchema.pre('save', function(next) {
