@@ -15,7 +15,7 @@
 ![Imgur](https://i.imgur.com/3hY0xP0.png)
 
 
-We are going to develop are Feed Page today.  
+We are going to develop our Feed Page today.  
 
 - Lets go ahead and create a component to hold our page!
 
