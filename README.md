@@ -275,4 +275,183 @@ export function create(post) {
 
 ```
 
-- Things to note here, the header is how we have to send over our token that is being stored in localstorage. We have to do this for every resource besides login and signup, because those are the operations that create the token.  Remember when we send over the token, it goes through our ```app.use(require('./config/auth')); ``` middleware and inside of that module, we check to see if the token exists and is valid, and if it is we assing the decoded tokens value to req.user ```req.user = decoded.user;```
+- Things to note here, the header is how we have to send over our token that is being stored in localstorage. We have to do this for every resource besides login and signup, because those are the operations that create the token.  Remember when we send over the token, it goes through our ```app.use(require('./config/auth')); ``` middleware and inside of that module, we check to see if the token exists and is valid, and if it is we assign the decoded tokens value to req.user ```req.user = decoded.user;```
+
+**Where to import the function**
+
+- What we want to do is think about where we want to keep our state for all the Posts that will be rendered in our feed!
+
+- Since we want to be able to pass down all of our posts in the future to our `PostFeed` component, it would make sense to set up our function in our `Feed` component!
+
+```
+import React, { useState, useEffect } from 'react';
+import AddPost from '../../components/AddPostForm/AddPostForm';
+import * as postsAPI from '../../utils/post-api';
+
+export default function Feed(){
+  const [posts, setPosts] = useState([])
+
+
+  async function handleAddPost (post){
+   
+    const data = await postsAPI.create(post);
+    console.log(data)
+  }
+
+  
+    return (
+        <>
+         <PageHeader />
+        <AddPost handleAddPost={handleAddPost}/>
+        <PostFeed/>
+        </>
+    )
+}
+```
+
+Here we set up our utility function in `handleAddPost` in the Feed component that will hold our state that contains all the posts for our app!
+
+**Now lets use it!**
+
+AddPostForm
+
+```js
+ function handleSubmit(e){
+    e.preventDefault()
+
+    const formData = new FormData()
+    formData.append('photo', selectedFile)
+    formData.append('caption', state.caption)
+    props.handleAddPost(formData); // calling our function!
+ }
+```
+
+- How would you confirm that it worked!
+
+- Check the response and check the server!
+
+**Checking the server**
+
+we see our server just has a simple response
+
+```js
+function create(req, res){
+   console.log(req.body, req.file)
+   res.json({data: 'working'})
+}
+```
+
+- Seeing an empty object and undefined for our logs, what do we have to set up again? What kind of request are we making?
+
+**Setting up a form/multipart process on the server**
+
+- setup our multer!
+
+- routes/posts.js
+
+```js
+const express = require('express');
+const router = express.Router();
+const postsCtrl = require('../../controllers/posts');
+const multer  = require('multer')
+const upload = multer()
+// /*---------- Public Routes ----------*/
+router.post('/', upload.single('photo'), postsCtrl.create);
+router.get('/', postsCtrl.index)
+
+
+/*---------- Protected Routes ----------*/
+
+module.exports = router;
+```
+
+- As we can see we set up it up the same way, We initialize multer, and then add it to the middlechain on the function that is recieving a file
+
+- `upload.single('photo')` - photo is the property we are expecting from the request that has the value of our image.
+
+- Testings again we should be able to confirm the proper logs!
+
+**Setting up the Post Create function**
+
+- We need the aws/sdk again in order to upload our image to aws
+- Also be sure to check the model in order to see what properties you need to be adding!
+
+controllers/posts.js
+```js
+const S3 = require('aws-sdk/clients/s3');
+const { v4: uuidv4 } = require('uuid'); // import uuid to generate random ID's
+
+const s3 = new S3(); // initialize s3 constructor
+
+module.exports = {
+    create,
+    index
+}
+
+function create(req, res){
+    console.log(req.file, req.body, 'this is create method', req.user)
+    try {
+        const filePath = `${uuidv4()}/${req.file.originalname}`
+        const params = {Bucket: 'collectorcat', Key: filePath, Body: req.file.buffer};
+        s3.upload(params, async function(err, data){
+
+            const post = await Post.create({caption: req.body.caption, user: req.user, photoUrl: data.Location});
+
+            console.log(post)
+            res.status(201).json({post: post})
+        })
+
+
+    } catch(err){
+        console.log(err)
+        res.json({data: err})
+    }
+}
+
+
+// rest of code!
+```
+
+Looking at the post model we see have the following properties (photoUrl, user)
+
+```js
+const postSchema = new mongoose.Schema({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    photoUrl: String,
+    caption: String,
+    likes: [likesSchema]
+  })
+```
+
+- so we have to pass to our create both the userId, and the photoUrl of our image location on aws!
+
+- Where is req.user coming from again? If you can't remeber, scroll up and read again!
+
+**Setting are state**
+
+Feed.jsx
+
+```js
+import AddPost from '../../components/AddPostForm/AddPostForm';
+import * as postsAPI from '../../utils/post-api';
+
+export default function Feed({ user,handleLogout}){
+  const [posts, setPosts] = useState([])
+
+
+  async function handleAddPost (post){
+    console.log(post)
+    const data = await postsAPI.create(post);
+    console.log(data.post, ' This is new pup', data, ' data variable')
+    setPosts(posts => [data.post, ...posts])
+  }
+
+```
+
+- Here our actually object is inside of data.post, where is post coming from? Check the controller function!
+
+- Then in our setPosts, we are creating a new array, adding our post to the front of the array, and spreading out all the old posts into the rest of the array!
+
+- Then confirm that it works by looking in the devtools at your Feed component and you should see something like this
+
+![Imgur](https://i.imgur.com/I9NiqGp.png)
