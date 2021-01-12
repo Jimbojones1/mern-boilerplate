@@ -455,3 +455,10 @@ export default function Feed({ user,handleLogout}){
 - Then confirm that it works by looking in the devtools at your Feed component and you should see something like this
 
 ![Imgur](https://i.imgur.com/I9NiqGp.png)
+
+
+**Resources**
+
+[multer](https://www.npmjs.com/package/multer)
+[aws/sdk](https://www.npmjs.com/package/aws-sdk)
+[semantic ui react](https://react.semantic-ui.com/)
