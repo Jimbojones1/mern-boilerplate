@@ -63,3 +63,12 @@ return (
     </div>
   );
 ```
+
+**Planning The components**
+Looking back on the wireframe 
+
+<details open>
+<summary>what components are being rendered out on the page?</summary>
+<br>
+Well, you asked for it!
+</details>
