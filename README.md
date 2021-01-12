@@ -161,3 +161,118 @@ export default function Feed(props){
     )
 }
 ```
+
+
+**Creating a Post**
+
+- Lets first create our form, It is going to look very similiar to yesterday 
+
+- AddPostForm
+
+```js
+import React, { useState } from 'react';
+
+import { Button, Form, Grid, Header, Image,  Segment } from 'semantic-ui-react'
+
+export default function AddPuppyForm(props){
+  const [selectedFile, setSelectedFile] = useState('')
+  const [state, setState] = useState({
+    caption: ''
+  })
+
+  function handleFileInput(e){
+    setSelectedFile(e.target.files[0])
+  }
+
+
+  function handleChange(e){
+    setState({
+      ...state,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  function handleSubmit(e){
+    e.preventDefault()
+             
+    const formData = new FormData()
+    formData.append('photo', selectedFile)
+    formData.append('caption', state.caption)
+    
+    // Have to submit the form now! We need a function!
+  }
+
+
+  return (
+    
+    <Grid textAlign='center' style={{ height: '25vh' }} verticalAlign='middle'>
+      <Grid.Column style={{ maxWidth: 450 }}>
+        <Segment>
+        
+            <Form  autoComplete="off" onSubmit={handleSubmit}>
+            
+              <Form.Input
+                  className="form-control"
+                  name="caption"
+                  value={state.caption}
+                  placeholder="What's on your pups mind?"
+                  onChange={handleChange}
+                  required
+              />   
+              <Form.Input
+                className="form-control"
+                type="file"
+                name="photo"
+                placeholder="upload image"
+                onChange={handleFileInput}
+              />   
+              <Button
+                type="submit"
+                className="btn"
+              >
+                ADD PUPPY
+              </Button>
+            </Form>
+          </Segment>
+      </Grid.Column>
+    </Grid>
+   
+  ); 
+}
+```
+
+**key things to note**
+
+Styling - we are using semantic ui's [grid prop](https://react.semantic-ui.com/collections/grid/) verticalAlign, to align our component in the middle of the page! We are also setting the max-width to make sure our form doens't take up the whole page.
+
+formData - Since we have to send over a formData to the server we have to create formData and append our state propeties to it, and this is what we will pass to our function that will make our api call to our server.
+
+**Creating a fetch Post function**
+
+- Since we are dealing with a new resource "posts", we'll create a new utility module to handle all of its crud operations.
+
+```
+mkdir utils/post-api.js
+```
+
+What is going to be are base URL for this resource? Hint look at the server and see what is set up to handle the "post resource requests"
+
+```js
+import tokenService from './tokenService';
+
+const BASE_URL = '/api/posts';
+
+export function create(post) {
+    return fetch(BASE_URL, {
+      method: 'POST',
+      body: post,
+      headers: {
+        'Authorization': 'Bearer ' + tokenService.getToken()
+      }
+    
+    }).then(res => res.json());
+  }
+
+```
+
+- Things to note here, the header is how we have to send over our token that is being stored in localstorage. We have to do this for every resource besides login and signup, because those are the operations that create the token.  Remember when we send over the token, it goes through our ```app.use(require('./config/auth')); ``` middleware and inside of that module, we check to see if the token exists and is valid, and if it is we assing the decoded tokens value to req.user ```req.user = decoded.user;```
