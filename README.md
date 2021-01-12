@@ -70,5 +70,7 @@ Looking back on the wireframe
 <details open>
 <summary>what components are being rendered out on the page?</summary>
 <br>
-Well, you asked for it!
+1. Header Component
+2. Post Feed Component that will render each Post 
+3. A Card for each Post
 </details>
