@@ -71,7 +71,93 @@ Looking back on the wireframe
 <summary>what components are being rendered out on the page?</summary>
 <br>
 1. Header Component <br/>
-2. a Form Component
-3. Post Feed Component that will render each Post 
-4. A Card for each Post
+2. a addPostForm Component <br/>
+3. Post Feed Component that will render each Post <br/>
+4. A Card for each Post <br />
 </details>
+
+
+Okay now that we know what components we need lets go ahead and create all of those in our components folder. We're going to assume from here on out you can make the proper file structure
+
+- components/Header/Header.jsx
+
+```js
+import React from 'react';
+
+import { Header, Segment} from 'semantic-ui-react';
+
+
+export default function PageHeader({user, handleLogout}){
+    return (
+        <Segment>
+            <Header as='h2' >
+              This is the HEADER!
+            </Header>
+        </Segment>
+    )
+}
+```
+
+- components/AddPostForm/AddPostForm.jsx
+
+```js
+import React, { useState } from 'react';
+
+export default function AddPostForm(){
+    
+    return (
+        <span> Post Form</Form>
+    )
+}
+
+```
+
+- components/PostFeed/PostFeed.jsx
+
+```js
+import React from 'react';
+
+export default function PostFeed(props){
+
+    return (
+       <div>THIS IS THE POST FEED THAT WILL RENDER OUT EACH POST AS A CARD</div>
+    )
+}
+```
+- componets/PostCard/PostCard.jsx
+
+```js
+import React from 'react';
+
+function PostCard(props) { 
+
+  return (
+    <div>I will render each post as a semantic ui card</div>
+  );
+}
+
+export default PostCard;
+```
+
+- Okay, So we created all of our components that will be rendered as children or further descendents of our `Feed` Component.
+
+**Rendering the components in our Feed Component**
+
+```js
+import React,  from 'react';
+import PageHeader from '../../components/Header/Header';
+import AddPost from '../../components/AddPostForm/AddPostForm';
+import PostFeed from '../../components/PostFeed/PostFeed'; 
+
+
+export default function Feed(props){
+
+    return (
+        <>
+        <PageHeader />
+        <AddPost />
+        <PostFeed/>
+        </>
+    )
+}
+```
