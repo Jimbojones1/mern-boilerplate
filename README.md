@@ -18,3 +18,12 @@
 ## Wireframe 
 
 ![Imgur](https://i.imgur.com/dUdOeu3.png)
+
+
+- What components do we have?
+
+1.  It looks like we have header component
+2.  A Profile Bio with the image of the user and thier information
+3.  A container for the the users posts
+4.  Cards to render out each Post!
+
