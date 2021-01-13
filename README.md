@@ -251,10 +251,11 @@ export default function ProfilePage(){
         try {    
 
             const username = location.pathname.substring(1)
+            // location.pathname returns /jimbo so we need to cut off the / using the js method substring
             // This gets the username from the url! 
-            console.log(username)
+            console.log(username, 'username from the path')
             const data = await userService.getProfile(username);
-            console.log(data)
+            console.log(data, 'data from getProfile')
             setLoading(() => false)
             setPosts(() => [...data.posts])
             setUser(() => setUser(data.user))
@@ -268,10 +269,7 @@ export default function ProfilePage(){
 
     useEffect(() => {
         getProfile()
-       
     }, [])
-
-
 
     return (
     
@@ -302,6 +300,54 @@ export default function ProfilePage(){
 }
 ```
 
+- Here we added a ternary that we flip from `true` to `false` after the page `userService.getProfile(username);` is finished!
+- Then since our controller function is returning the data for the user's posts and the users information, we need to set them both in our state!
 
+
+*passing props*
+
+- Notice we are then passing the users information as a prop to `ProfileBio` so we can render out the users information and profile bio info!
+
+**ProfileBio**
+
+- Lets update the profile bio to render out our information
+
+components/ProfileBio/ProfileBio
+
+
+```js
+import React from 'react';
+import {  Image, Grid, Segment } from 'semantic-ui-react';
+
+
+function ProfileBio({user}) { 
+  return (
+  <Grid textAlign='center' columns={2}>
+    <Grid.Row>
+      <Grid.Column>
+        <Image src={`${user.photoUrl ? user.photoUrl : "https://react.semantic-ui.com/images/wireframe/square-image.png"} `} avatar size='small' />
+      </Grid.Column>
+      <Grid.Column textAlign="left" style={{ maxWidth: 450 }}>
+        <Segment vertical>
+           <h3>{user.username}</h3>
+        </Segment>
+        <Segment>
+           <span> Bio: {user.bio}</span>
+        </Segment>
+          
+      </Grid.Column>
+    </Grid.Row>
+  </Grid>
+
+  );
+}
+
+
+
+export default ProfileBio;
+```
+
+- We are just using semantic ui default image incase the user doesn't have a profile image saved! 
+- We are using another nested grid to complete our two column layout!
 
 
