@@ -12,6 +12,7 @@
 | --- |
 | Create a Profile Page  |
 | Understand the flow of a post request client to server |
+| Understand flow of props and Create user Bio Section |
 
 
 ## Wireframe 
