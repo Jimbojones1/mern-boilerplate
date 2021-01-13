@@ -55,19 +55,19 @@ export default function ProfilePage({user}){
 
 ```js
  <Switch>
-          <Route exact path="/">
-              <Feed user={user}/>
-          </Route>
-          <Route exact path="/login">
-             <LoginPage handleSignUpOrLogin={handleSignUpOrLogin}/>
-          </Route>
-          <Route exact path="/signup">
-             <SignupPage handleSignUpOrLogin={handleSignUpOrLogin}/>
-          </Route>
-          <Route path="/:username">
-             <ProfilePage />
-          </Route>
-      </Switch>
+    <Route exact path="/">
+        <Feed user={user}/>
+    </Route>
+    <Route exact path="/login">
+       <LoginPage handleSignUpOrLogin={handleSignUpOrLogin}/>
+    </Route>
+    <Route exact path="/signup">
+       <SignupPage handleSignUpOrLogin={handleSignUpOrLogin}/>
+    </Route>
+    <Route path="/:username">
+       <ProfilePage />
+    </Route>
+</Switch>
 
 ```
 
