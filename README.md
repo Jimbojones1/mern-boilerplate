@@ -24,6 +24,5 @@ The First thing we need to think about is what kind of requests we are going to 
 1. A user can click on the heart to create a like and the heart will turn red
 2. A user can click on the heart to remove a like and the heart will turn from red to grey
 
-
-
+*Whenever we use the word **Create** we should immediatly think **POST** request.
 
