@@ -46,4 +46,52 @@ module.exports = router;
 - DELETE - For the delete we just need to know the likes ID in order to remove it
 
 Always refer to our [routing guide](https://gist.github.com/jim-clark/17908763db7bd3c403e6)
-- 
+
+#### Making our Util functions
+
+Since we are making requests to update a new resource likes make a new util module for the likesService
+
+```
+touch utils/likesService
+```
+
+Then lets decide what our base url is? Remeber we need to look at the server to see where our likes router is mounted, if we look at the server we will find.
+
+```js
+app.use('/api/posts', require('./routes/api/posts'));
+app.use('/api', require('./routes/api/likes'));
+
+// rest of code
+```
+
+So we see our base url will be ```/api```
+
+Lets go ahead and write out our util functions.
+
+```js
+import tokenService from './tokenService';
+
+const BASE_URL = '/api';
+
+export function create(id) {
+    return fetch(`${BASE_URL}/posts/${id}/likes`, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + tokenService.getToken()
+      }
+    
+    }).then(res => res.json());
+  }
+
+export function removeLike(id){
+    return fetch(`${BASE_URL}/likes/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': 'Bearer ' + tokenService.getToken()
+          }
+    }).then(res => res.json());
+}
+```
+
+- Always sending across our user token! Remember this always us to access req.user in any of our routes thanks to our `app.use(require('./config/auth')); ` middleware!
+
