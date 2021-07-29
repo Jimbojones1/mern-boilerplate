@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const SALT_ROUNDS = 6;
 
 const userSchema = new mongoose.Schema({
-  name: String,
+  username: {type: String, required: true, lowercase: true, unique: true},
   email: {type: String, required: true, lowercase: true, unique: true},
   password: String
 }, {
@@ -19,7 +19,7 @@ userSchema.set('toJSON', {
   }
 });
 
-// Need this for .populate
+// this is if you populate the user
 userSchema.set('toObject', {
   transform: (doc, ret, opt) => {
    delete ret.password;

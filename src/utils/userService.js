@@ -5,7 +5,8 @@ const BASE_URL = '/api/users/';
 function signup(user) {
   return fetch(BASE_URL + 'signup', {
     method: 'POST',
-    headers: new Headers({'Content-Type': 'application/json'}),
+    headers: new Headers({'Content-Type': 'application/json'}),  // If you are sending a file/photo over
+    // what do datatype do you need to change this too?
     body: JSON.stringify(user)
   })
   .then(res => {

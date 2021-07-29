@@ -15,6 +15,9 @@ const app = express();
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'build')));
+// Configure the auth middleware
+// This decodes the jwt token, and assigns
+// the user information to req.user
 app.use(require('./config/auth')); 
 // api routes must be before the "catch all" route
 app.use('/api/users', require('./routes/api/users'));
